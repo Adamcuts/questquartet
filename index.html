@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quest Quartet</title>
+    <style>
+        /* Add your CSS styles here */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-size: 110%;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f2f2f2;
+            padding: 20px;
+        }
+
+        .title-box {
+            background-color: rgba(255, 255, 255, 0.7);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .title-box h1 {
+            font-size: 24px;
+            font-weight: normal;
+        }
+
+        .title-box h2 {
+            font-family: Copperplate, Papyrus, fantasy; /* Changed font-family */
+            font-size: 72px; /* Doubled the size */
+            font-weight: bold; /* Made it bold */
+            color: #0d1bd9; /* Changed color */
+            text-shadow: 2px 2px 4px #000; /* Added black shadow */
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+
+        .title-box p {
+            font-size: 16px;
+            text-align: center;
+        }
+
+        .container {
+            display: flex; /* Display the columns in a row */
+            flex-wrap: wrap; /* Allow wrapping to the next line if needed */
+            justify-content: center; /* Center align the columns */
+        }
+
+        .column {
+            background-color: rgba(255, 255, 255, 0.7);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+            margin: 0 10px; /* Add some space between columns */
+        }
+
+        .add-files-button {
+            margin-bottom: 10px;
+            margin-top: 20px;
+        }
+
+        .add-files-button input[type="file"] {
+            display: none;
+        }
+
+        .add-button {
+            display: inline-block;
+            width: 48px;
+            height: 48px;
+            background-color: #007bff;
+            border-radius: 50%;
+            color: #fff;
+            font-size: 24px;
+            line-height: 48px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .add-button:hover {
+            background-color: #0056b3;
+        }
+
+        .track-list {
+            align-items: center;
+        }
+
+        .audio-box {
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            padding: 10px;
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+            background-color: #bad0f7;
+            padding: 10px;
+            margin: auto;
+        }
+
+        .audio-box:not(:first-child) {
+            margin-top: 10px;
+        }
+
+        .audio-box h3 {
+            margin-top: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            white-space: nowrap;
+            animation: scrollText linear infinite alternate;
+            text-transform: capitalize;
+            font-size: 80%;
+        }
+
+        .audio-box h3::after {
+            content: '';
+        }
+
+        .playing {
+            background-color: #3BCFED;
+        }
+
+        @keyframes scrollText {
+            from { transform: translateX(100%); }
+            to { transform: translateX(-100%); }
+        }
+
+        .delete-button {
+            margin-left: 5px;
+            background-color: #ffffff;
+            border: 2px solid #ed535b;
+            color: #ed535b;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .delete-button::before {
+            content: '\02613';
+            font-weight: 900;
+            font-size: 20px;
+        }
+
+        .audio-controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 10px;
+        }
+
+        .audio-controls button {
+            margin: 0 5px;
+            background-color: #0a61f7;
+            border: none;
+            color: white;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        input[type="range"] {
+            width: 100%; /* Occupy the available width */
+            margin-top: 5px;
+            -webkit-appearance: none;
+            appearance: none;
+            height: 8px;
+            border-radius: 5px;
+            background-color: #0a61f7;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 19.2px;
+            height: 19.2px;
+            border-radius: 50%;
+            background-color: #0a61f7;
+            cursor: pointer;
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 19.2px;
+            height: 19.2px;
+            border-radius: 50%;
+            background-color: #0a61f7;
+            cursor: pointer;
+        }
+
+        label[for="volume"] {
+            display: none;
+        }
+
+        .master-volume-bar input[type="range"] {
+            width: 100%; /* Occupy the available width */
+            margin-top: 5px;
+            -webkit-appearance: none;
+            appearance: none;
+            height: 8px;
+            border-radius: 5px;
+            background-color: #0a61f7;
+        }
+
+        .master-volume-bar input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 19.2px;
+            height: 19.2px;
+            border-radius: 50%;
+            background-color: #0a61f7;
+            cursor: pointer;
+        }
+
+        .master-volume-bar input[type="range"]::-moz-range-thumb {
+            width: 19.2px;
+            height: 19.2px;
+            border-radius: 50%;
+            background-color: #0a61f7;
+            cursor: pointer;
+        }
+
+        /* Adjusted font size for audio box text */
+        .audio-box h3 {
+            font-size: 60%;
+        }
+    </style>
+</head>
+<body>
+    <div class="title-box">
+        
+        <h2>Quest Quartet</h2> <!-- Updated font-family and styles -->
+        <p><b>Audio mixer where you can add and control different audio tracks for your TTRPG's</b></p>
+    </div>
+    <div class="container">
+        <div class="column" id="music-column" ondrop="handleDrop(event, 'music-track-list')" ondragover="handleDragOver(event)">
+            <h2>Music</h2>
+            <div class="master-volume-bar">
+                <input type="range" min="0" max="1" step="0.01" value="1" onchange="changeMasterVolume(this, 'music-track-list')">
+            </div>
+            <div class="add-files-button">
+                <input type="file" id="music-file-input" onchange="handleFilesInput('music-file-input', 'music-track-list')" multiple>
+                <label for="music-file-input" class="add-button">+</label>
+            </div>
+            <div id="music-track-list" class="track-list" ondrop="handleDrop(event, 'music-track-list')" ondragover="handleDragOver(event)"></div>
+        </div>
+        <!-- Ambience Column -->
+        <div class="column" id="ambience-column" ondrop="handleDrop(event, 'ambience-track-list')" ondragover="handleDragOver(event)">
+            <h2>Ambience</h2>
+            <div class="master-volume-bar">
+                <input type="range" min="0" max="1" step="0.01" value="1" onchange="changeMasterVolume(this, 'ambience-track-list')">
+            </div>
+            <div class="add-files-button">
+                <input type="file" id="ambience-file-input" onchange="handleFilesInput('ambience-file-input', 'ambience-track-list')" multiple>
+                <label for="ambience-file-input" class="add-button">+</label>
+            </div>
+            <div id="ambience-track-list" class="track-list" ondrop="handleDrop(event, 'ambience-track-list')" ondragover="handleDragOver(event)"></div>
+        </div>
+        <!-- FX Column -->
+        <div class="column" id="fx-column" ondrop="handleDrop(event, 'fx-track-list')" ondragover="handleDragOver(event)">
+            <h2>FX</h2>
+            <div class="master-volume-bar">
+                <input type="range" min="0" max="1" step="0.01" value="1" onchange="changeMasterVolume(this, 'fx-track-list')">
+            </div>
+            <div class="add-files-button">
+                <input type="file" id="fx-file-input" onchange="handleFilesInput('fx-file-input', 'fx-track-list')" multiple>
+                <label for="fx-file-input" class="add-button">+</label>
+            </div>
+            <div id="fx-track-list" class="track-list" ondrop="handleDrop(event, 'fx-track-list')" ondragover="handleDragOver(event)"></div>
+        </div>
+        <!-- Weather Column -->
+        <div class="column" id="weather-column" ondrop="handleDrop(event, 'weather-track-list')" ondragover="handleDragOver(event)">
+            <h2>Weather</h2>
+            <div class="master-volume-bar">
+                <input type="range" min="0" max="1" step="0.01" value="1" onchange="changeMasterVolume(this, 'weather-track-list')">
+            </div>
+            <div class="add-files-button">
+                <input type="file" id="weather-file-input" onchange="handleFilesInput('weather-file-input', 'weather-track-list')" multiple>
+                <label for="weather-file-input" class="add-button">+</label>
+            </div>
+            <div id="weather-track-list" class="track-list" ondrop="handleDrop(event, 'weather-track-list')" ondragover="handleDragOver(event)"></div>
+        </div>
+    </div>
+
+    <script>
+        function handleFilesInput(inputId, trackListId) {
+            const files = Array.from(document.getElementById(inputId).files);
+            const trackList = document.getElementById(trackListId);
+            handleFiles(files, trackList);
+        }
+
+        function handleFiles(files, trackList) {
+            files.forEach((file, index) => {
+                const audio = new Audio();
+                audio.src = URL.createObjectURL(file);
+                audio.loop = true;
+                audio.dataset.name = file.name.split('.')[0];
+                appendAudioToList(audio, trackList, index);
+            });
+        }
+
+        function handleDragOver(event) {
+            event.preventDefault();
+            event.dataTransfer.dropEffect = "copy";
+        }
+
+        function handleDrop(event, trackListId) {
+            event.preventDefault();
+            const files = event.dataTransfer.files;
+            const trackList = document.getElementById(trackListId);
+            handleFiles(files, trackList);
+        }
+
+        function appendAudioToList(audio, trackList, index) {
+            const audioBox = document.createElement('div');
+            audioBox.classList.add('audio-box');
+            if (index === 0) { 
+                audioBox.classList.add('hanging');
+            }
+            audioBox.innerHTML = `
+                <h3>${audio.dataset.name}</h3>
+                <div class="audio-controls">
+                    <button onclick="togglePlayPause(this)">▶️</button>
+                    <button onclick="stopTrack(this)">⏹️</button>
+                    <button class="delete-button" onclick="removeTrack(this)"></button>
+                </div>
+                <input type="range" min="0" max="2" step="0.1" value="1" onchange="changeVolume(this)">
+            `;
+            trackList.appendChild(audioBox);
+            audioBox.appendChild(audio); 
+            audio.addEventListener('play', function() {
+                audioBox.classList.add('playing');
+            });
+            audio.addEventListener('pause', function() {
+                audioBox.classList.remove('playing');
+            });
+        }
+
+        function togglePlayPause(button) {
+            const audioBox = button.closest('.audio-box');
+            const audio = audioBox.querySelector('audio');
+            if (audio.paused) {
+                audio.play();
+            } else {
+                audio.pause();
+            }
+        }
+
+        function stopTrack(button) {
+            const audioBox = button.closest('.audio-box');
+            const audio = audioBox.querySelector('audio');
+            audio.pause();
+            audio.currentTime = 0;
+        }
+
+        function removeTrack(button) {
+            const audioBox = button.closest('.audio-box');
+            audioBox.remove();
+        }
+
+        function changeVolume(volumeInput) {
+            const audioBox = volumeInput.closest('.audio-box');
+            const audio = audioBox.querySelector('audio');
+            audio.volume = volumeInput.value;
+        }
+
+        function changeMasterVolume(volumeInput, trackListId) {
+            const trackList = document.getElementById(trackListId);
+            const audioBoxes = trackList.querySelectorAll('.audio-box');
+            const volume = volumeInput.value;
+            audioBoxes.forEach(audioBox => {
+                const audio = audioBox.querySelector('audio');
+                audio.volume = volume;
+            });
+        }
+    </script>
+</body>
+</html>
